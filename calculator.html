@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple calculator</title>
+  <style>
+    .calculator {
+      display: flex;
+      border: 1px solid #000000;
+      flex-direction: column;
+    }
+
+    .display {
+      width: 100%;
+      margin: 4px;
+      padding: 8px;
+      border: 2px solid #000000;
+      height: 20%;
+    }
+
+    .keyboard {
+      flex-grow: 1;
+      display: flex;
+    }
+
+    .digit {
+      display: flex;
+      flex-basis: 30%;
+      border: 1px solid #000000;
+      padding: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="calculator">
+    <input class="display"></input>
+    <div class="keyboard">
+      <div class="digit" data-digit="1">1</div>
+      <div class="digit" data-digit="2">2</div>
+      <div class="digit" data-digit="3">3</div>
+      <div class="digit" data-digit="4">4</div>
+      <div class="digit" data-digit="5">5</div>
+      <div class="digit" data-digit="6">6</div>
+      <div class="digit" data-digit="7">7</div>
+      <div class="digit" data-digit="8">8</div>
+      <div class="digit" data-digit="9">9</div>
+      <div class="digit" data-digit="0">0</div>
+    </div>
+  </div>
+</body>
+<script>
+
+
+  const calculator = {};
+
+  calculator.init = () => { 
+    calculator.display = document.querySelector('.display');
+    calculator.keyboard = document.querySelector('.keyboard');
+    calculator.keyboard.addEventListener('click', calculator.onClick);
+  }
+
+
+  calculator.appendDigit = (digit) => {
+    calculator.display.value += digit;
+  }
+  
+  calculator.onClick = (event) => {
+    const target = event.target;
+    target.matches('[data-digit]') && calculator.appendDigit(target.dataset.digit);
+  }
+
+  calculator.init();
+
+  // calculator.init = (calculatorObject) => {
+  // 	calculator.addEvents(calculatorObject.querySelectorAll('.digit'));
+  // };
+
+  // calculator.addEvents = (digitObject) => {
+  //   console.log(digitObject);
+  //   digitObject.forEach(keyObject => {
+  //     console.log(keyObject);
+  //     keyObject.addEventListener("click", () => { console.log(keyObject.getAttribute('data-digit')) });
+  //   });
+  // }
+
+  //calculator.init(document.querySelector(".calculator"));
+</script>
+
+</html>
