@@ -21,7 +21,7 @@
       height: 20%;
     }
 
-    .keyboard {
+    .keyboard_numbers {
       flex-grow: 1;
       display: flex;
     }
@@ -38,7 +38,7 @@
 <body>
   <div class="calculator">
     <input class="display"></input>
-    <div class="keyboard">
+    <div class="keyboard_numbers">
       <div class="digit" data-digit="1">1</div>
       <div class="digit" data-digit="2">2</div>
       <div class="digit" data-digit="3">3</div>
@@ -50,19 +50,35 @@
       <div class="digit" data-digit="9">9</div>
       <div class="digit" data-digit="0">0</div>
     </div>
+    <div class="keyboard_operators">
+      <div class="operator" data-operator="*">*</div>
+      <div class="operator" data-operator="-">-</div>
+      <div class="operator" data-operator="+">+</div>
+      <div class="operator" data-operator="/">/</div>
+    </div>
+    <div class="keyboard_functions">
+      <div class="function" data-function="clear">C</div>
+      <div class="function" data-function="=">=</div>
   </div>
 </body>
 <script>
 
 
   const calculator = {};
+  calculator.numberArray = [];
 
   calculator.init = () => { 
     calculator.display = document.querySelector('.display');
-    calculator.keyboard = document.querySelector('.keyboard');
-    calculator.keyboard.addEventListener('click', calculator.onClick);
-  }
 
+    calculator.keyboard_numbers = document.querySelector('.keyboard_numbers');
+    calculator.keyboard_numbers.addEventListener('click', calculator.onClick);
+
+    calculator.keyboard_operators = document.querySelector('.keyboard_operators');
+    calculator.keyboard_operators.addEventListener('click', calculator.onClick);
+
+    calculator.keyboard_functions = document.querySelector('.keyboard_functions');
+    calculator.keyboard_functions.addEventListener('click', calculator.onClick);
+  }
 
   calculator.appendDigit = (digit) => {
     calculator.display.value += digit;
@@ -71,23 +87,36 @@
   calculator.onClick = (event) => {
     const target = event.target;
     target.matches('[data-digit]') && calculator.appendDigit(target.dataset.digit);
+    target.matches('[data-operator]') && calculator.executeOperator(target.dataset.operator);
   }
 
-  calculator.init();
+  calculator.executeOperator = (operator) => {
+    calculatore.numberStore();
 
-  // calculator.init = (calculatorObject) => {
-  // 	calculator.addEvents(calculatorObject.querySelectorAll('.digit'));
-  // };
+    calculator.operator = operator;
+    calculator.display.value = '';
+  }
 
-  // calculator.addEvents = (digitObject) => {
-  //   console.log(digitObject);
-  //   digitObject.forEach(keyObject => {
-  //     console.log(keyObject);
-  //     keyObject.addEventListener("click", () => { console.log(keyObject.getAttribute('data-digit')) });
-  //   });
-  // }
 
-  //calculator.init(document.querySelector(".calculator"));
+  calculator.executeFunction = (calculatorFunction) => {
+    switch (calculatorFunction) {
+      case 'clear':
+        calculator.display.value = '';
+        break;
+      case '=':
+        calculator.numberStore();
+        calculator.display.value = calculator.calculate();
+        break;
+    }
+  }
+
+  calculator.calculate = () => eval(`${calculator.numberArray[0]} ${calculator.operator} ${calculator.numberArray[1]}`);
+
+  calculator.numberStore = () => {
+    calculator.numberArray.push(calculator.display.value);
+    calculator.display.value = '';
+  }
+
 </script>
 
 </html>
