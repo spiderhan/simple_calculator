@@ -67,6 +67,7 @@
 <body>
   <div class="calculator">
     <input class="display"></input>
+    <input class="hidden" data-memory></input>
     <div class="keyboard">
 
     <div class="keyboard_numbers">
@@ -102,29 +103,37 @@
   calculator.init = () => {
     calculator.display = document.querySelector('.display');
 
+    calculator.memory = document.querySelector('[data-memory]');
+
     calculator.keyboard_numbers = document.querySelector('.keyboard_numbers');
-    calculator.keyboard_numbers.addEventListener('click', calculator.onClick);
+    calculator.keyboard_numbers.addEventListener('click', calculator.eventHandler);
 
     calculator.keyboard_operators = document.querySelector('.keyboard_operators');
-    calculator.keyboard_operators.addEventListener('click', calculator.onClick);
+    calculator.keyboard_operators.addEventListener('click', calculator.eventHandler);
 
     calculator.keyboard_functions = document.querySelector('.keyboard_functions');
-    calculator.keyboard_functions.addEventListener('click', calculator.onClick);
+    calculator.keyboard_functions.addEventListener('click', calculator.eventHandler);
   }
 
-  calculator.appendDigit = (digit) => {
-    calculator.display.value += digit;
-  }
+calculator.displayAndMemory = (digit) => {
+  calculator.displayAppendDigit(digit);
+  calculator.memoryStoreDigit(digit);
+}
 
-  calculator.onClick = (event) => {
+  
+  calculator.displayAppendDigit = (digit) => calculator.display.value += digit;
+  
+  calculator.memoryStoreDigit = (digit) => calculator.memory.value = digit;
+
+  calculator.eventHandler = (event) => {
     const target = event.target;
-    target.matches('[data-digit]') && calculator.appendDigit(target.dataset.digit);
+    target.matches('[data-digit]') && calculator.displayAndMemory(target.dataset.digit);
     target.matches('[data-operator]') && calculator.executeOperator(target.dataset.operator);
     target.matches('[data-function]') && calculator.executeFunction(target.dataset.function);
   }
 
   calculator.executeOperator = (operator) => {
-    calculator.numberStore();
+    calculator.storeNumberInArray();
 
     calculator.operator = operator;
     calculator.display.value += ` ${operator} `;
@@ -135,18 +144,19 @@
     switch (calculatorFunction) {
       case 'clear':
         calculator.display.value = '';
-        component.numberArray = [];
+        calculator.numberArray = [];
         break;
       case '=':
-        calculator.numberStore();
+        calculator.storeNumberInArray();
+        console.log(calculator.numberArray);
         calculator.display.value = calculator.calculate();
         break;
     }
   }
-
+  
   calculator.calculate = () => eval(`${calculator.numberArray[0]} ${calculator.operator} ${calculator.numberArray[1]}`);
 
-  calculator.numberStore = () => calculator.numberArray.push(calculator.display.value);
+  calculator.storeNumberInArray = () => calculator.numberArray.push(calculator.memory.value);
 
   calculator.init();
 
